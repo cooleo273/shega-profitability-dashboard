@@ -146,14 +146,39 @@ export async function DELETE(
   }
 
   try {
-    await prisma.project.delete({
-      where: { id },
-    })
+    // First, delete all related records
+    await prisma.$transaction([
+      // Delete deliverables
+      prisma.deliverable.deleteMany({
+        where: { projectId: id }
+      }),
+      // Delete expenses
+      prisma.projectExpense.deleteMany({
+        where: { projectId: id }
+      }),
+      // Delete time logs
+      prisma.timeLog.deleteMany({
+        where: { projectId: id }
+      }),
+      // Delete tasks
+      prisma.task.deleteMany({
+        where: { projectId: id }
+      }),
+      // Delete team members
+      prisma.projectTeamMember.deleteMany({
+        where: { projectId: id }
+      }),
+      // Finally, delete the project
+      prisma.project.delete({
+        where: { id }
+      })
+    ])
+
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting project:', error)
+    console.error("Error deleting project:", error)
     return NextResponse.json(
-      { error: 'Failed to delete project' },
+      { error: "Failed to delete project" },
       { status: 500 }
     )
   }
