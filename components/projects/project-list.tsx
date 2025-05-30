@@ -60,6 +60,8 @@ interface ProjectTeamMember {
   id: string;
   name: string;
   role?: string;
+  hourlyRate?: number;
+  hours?: number;
 }
 interface ProjectClient {
   id: string;
@@ -90,41 +92,47 @@ interface Project {
       hourlyRate: number; // User-specific hourly rate for this log
     };
   }[];
+  expenses?: {
+    id: string;
+    name: string;
+    amount: number;
+    type: string;
+    date: string;
+  }[];
 }
 
 // --- Utility Functions ---
 const calculateProjectCost = (project: Project): number => {
-  // 1. If actualCost is already provided by the API (and is a number), use it.
-  if (typeof project.actualCost === 'number' && !isNaN(project.actualCost)) {
-    return project.actualCost;
-  }
+  // 1. Calculate labor costs from team members
+  const laborCost = (project.team || []).reduce((total, member) => {
+    const hourlyRate = member.hourlyRate ?? project.hourlyRate ?? 0;
+    return total + (hourlyRate * (member.hours || 0));
+  }, 0);
 
-  // 2. Calculate from billable time logs if available.
-  if (project.timeLogs && project.timeLogs.length > 0) {
-    return project.timeLogs.reduce((total, log) => {
-      if (log.billable) {
-        // Prefer user-specific rate from the log, fallback to project-level rate, then to 0 if none.
-        const rate = log.user?.hourlyRate ?? project.hourlyRate ?? 0;
-        if (typeof log.hours === 'number' && typeof rate === 'number') {
-          return total + (log.hours * rate);
-        }
-      }
-      return total;
-    }, 0);
-  }
+  // 2. Calculate expenses from project expenses
+  const expensesCost = (project.expenses || []).reduce((total, expense) => {
+    return total + (expense.amount || 0);
+  }, 0);
 
-  // 3. Fallback: If no time logs, calculate based on project's estimated hours and project rate.
-  if (typeof project.estimatedHours === 'number' && typeof project.hourlyRate === 'number') {
-    return project.estimatedHours * project.hourlyRate;
-  }
+  // 3. Calculate time log costs if available
+  const timeLogCost = (project.timeLogs || []).reduce((total, log) => {
+    if (log.billable) {
+      const rate = log.user?.hourlyRate ?? project.hourlyRate ?? 0;
+      return total + (log.hours * rate);
+    }
+    return total;
+  }, 0);
 
-  // 4. If none of the above, cost is considered 0.
-  return 0;
+  // Return the total of all costs
+  return laborCost + expensesCost + timeLogCost;
 };
 
 const calculateProfitMargin = (budget: number, cost: number): number => {
-  if (budget === 0) return cost === 0 ? 0 : -Infinity; // Avoid division by zero, show -Infinity if cost > 0
-  if (cost === 0 && budget > 0) return 100; // If no cost and some budget, 100% margin
+  if (budget === 0) {
+    if (cost === 0) return 0; // Both budget and cost are 0
+    return -100; // Cost exists but no budget
+  }
+  if (cost === 0) return 100; // No cost but has budget
   return ((budget - cost) / budget) * 100;
 };
 
@@ -262,20 +270,37 @@ export function ProjectList() {
   };
 
   const handleDeleteProject = async (projectId: string, projectName: string) => {
-    // Using native confirm, consider a custom modal for better UX in a real app
-    if (window.confirm(`Are you sure you want to delete project "${projectName}"? This action cannot be undone.`)) {
-      try {
-        const response = await fetch(`/api/projects/${projectId}`, { method: 'DELETE' });
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: "Failed to delete project" }));
-            throw new Error(errorData.message || "Failed to delete project");
-        }
-        setProjects(prev => prev.filter(p => p.id !== projectId));
-        toast({ title: "Success", description: `Project "${projectName}" deleted.` });
-      } catch (error) {
-        console.error('Error deleting project:', error);
-        toast({ title: "Error", description: (error instanceof Error ? error.message : "Could not delete project."), variant: "destructive" });
+    if (!window.confirm(`Are you sure you want to delete project "${projectName}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/projects/${projectId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: "Failed to delete project" }));
+        throw new Error(errorData.message || `Failed to delete project: ${response.status} ${response.statusText}`);
       }
+
+      // Only update the UI if the deletion was successful
+      setProjects(prev => prev.filter(p => p.id !== projectId));
+      toast({
+        title: "Success",
+        description: `Project "${projectName}" has been deleted.`,
+        variant: "default",
+      });
+    } catch (error) {
+      console.error('Error deleting project:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to delete project. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
