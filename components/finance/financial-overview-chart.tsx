@@ -193,89 +193,89 @@ export function FinancialOverviewChart() {
       <div style={{ height: "300px" }}>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-            <CartesianGrid
-              strokeDasharray="4 4"
-              strokeOpacity={0.2}
-              vertical={false}
-              className="stroke-border"
-            />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
-              className="text-muted-foreground"
-              padding={{ left: 10, right: 10 }}
+          <CartesianGrid
+            strokeDasharray="4 4"
+            strokeOpacity={0.2}
+            vertical={false}
+            className="stroke-border"
+          />
+          <XAxis
+            dataKey="month"
+            tickLine={false}
+            axisLine={false}
+            tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+            className="text-muted-foreground"
+            padding={{ left: 10, right: 10 }}
               interval="preserveStartEnd"
-            />
-            <YAxis
-              tickFormatter={(value) => `$${value / 1000}k`}
-              tickLine={false}
-              axisLine={false}
-              tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
+          />
+          <YAxis
+            tickFormatter={(value) => `$${value / 1000}k`}
+            tickLine={false}
+            axisLine={false}
+            tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
               width={65}
-              className="text-muted-foreground"
-            />
-            <Tooltip
-              content={<CustomTooltip />}
-              cursor={{ stroke: "hsl(var(--accent))", strokeWidth: 1.5, strokeDasharray: "3 3" }}
-              wrapperStyle={{ outline: "none" }}
-            />
-            <Legend
-              content={renderLegend}
-              verticalAlign="top"
-              wrapperStyle={{ paddingBottom: '15px', paddingTop: '5px' }}
-            />
-            <Line
-              type="monotone"
-              dataKey="revenue"
-              name="Revenue"
-              stroke={LINE_COLORS.revenue}
-              strokeWidth={2.5}
-              dot={{ r: 3, strokeWidth: 1.5, fill: "hsl(var(--card))", stroke: LINE_COLORS.revenue }}
-              activeDot={{
-                r: 7,
-                strokeWidth: 2,
-                stroke: LINE_COLORS.revenue,
-                fill: "hsl(var(--card))",
-                style: { filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.1))" }
-              }}
-              animationDuration={700}
-            />
-            <Line
-              type="monotone"
-              dataKey="expenses"
-              name="Expenses"
-              stroke={LINE_COLORS.expenses}
-              strokeWidth={2.5}
-              dot={{ r: 3, strokeWidth: 1.5, fill: "hsl(var(--card))", stroke: LINE_COLORS.expenses }}
-              activeDot={{
-                r: 7,
-                strokeWidth: 2,
-                stroke: LINE_COLORS.expenses,
-                fill: "hsl(var(--card))",
-                style: { filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.1))" }
-              }}
-              animationDuration={700}
-            />
-            <Line
-              type="monotone"
-              dataKey="profit"
-              name="Profit"
-              stroke={LINE_COLORS.profit}
-              strokeWidth={2.5}
-              dot={{ r: 3, strokeWidth: 1.5, fill: "hsl(var(--card))", stroke: LINE_COLORS.profit }}
-              activeDot={{
-                r: 7,
-                strokeWidth: 2,
-                stroke: LINE_COLORS.profit,
-                fill: "hsl(var(--card))",
-                style: { filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.1))" }
-              }}
-              animationDuration={700}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+            className="text-muted-foreground"
+          />
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{ stroke: "hsl(var(--accent))", strokeWidth: 1.5, strokeDasharray: "3 3" }}
+            wrapperStyle={{ outline: "none" }}
+          />
+          <Legend
+            content={renderLegend}
+            verticalAlign="top"
+            wrapperStyle={{ paddingBottom: '15px', paddingTop: '5px' }}
+          />
+          <Line
+            type="monotone"
+            dataKey="revenue"
+            name="Revenue"
+            stroke={LINE_COLORS.revenue}
+            strokeWidth={2.5}
+            dot={{ r: 3, strokeWidth: 1.5, fill: "hsl(var(--card))", stroke: LINE_COLORS.revenue }}
+            activeDot={{
+              r: 7,
+              strokeWidth: 2,
+              stroke: LINE_COLORS.revenue,
+              fill: "hsl(var(--card))",
+              style: { filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.1))" }
+            }}
+            animationDuration={700}
+          />
+          <Line
+            type="monotone"
+            dataKey="expenses"
+            name="Expenses"
+            stroke={LINE_COLORS.expenses}
+            strokeWidth={2.5}
+            dot={{ r: 3, strokeWidth: 1.5, fill: "hsl(var(--card))", stroke: LINE_COLORS.expenses }}
+            activeDot={{
+              r: 7,
+              strokeWidth: 2,
+              stroke: LINE_COLORS.expenses,
+              fill: "hsl(var(--card))",
+              style: { filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.1))" }
+            }}
+            animationDuration={700}
+          />
+          <Line
+            type="monotone"
+            dataKey="profit"
+            name="Profit"
+            stroke={LINE_COLORS.profit}
+            strokeWidth={2.5}
+            dot={{ r: 3, strokeWidth: 1.5, fill: "hsl(var(--card))", stroke: LINE_COLORS.profit }}
+            activeDot={{
+              r: 7,
+              strokeWidth: 2,
+              stroke: LINE_COLORS.profit,
+              fill: "hsl(var(--card))",
+              style: { filter: "drop-shadow(0 1px 3px rgba(0,0,0,0.1))" }
+            }}
+            animationDuration={700}
+          />
+        </LineChart>
+      </ResponsiveContainer>
       </div>
     </div>
   )

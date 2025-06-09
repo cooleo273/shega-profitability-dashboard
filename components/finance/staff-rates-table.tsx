@@ -131,24 +131,24 @@ export function StaffRatesTable() {
       if (!response.ok) throw new Error('Failed to update staff rates')
 
       // Update local state
-      setStaffData(
-        staffData.map((staff) =>
-          staff.id === id
-            ? {
-                ...staff,
-                role: editValues.role,
-                project: editValues.project,
-                costRate: editValues.costRate,
-                billRate: editValues.billRate,
-              }
-            : staff,
-        ),
-      )
-      setEditingId(null)
-      toast({
-        title: "Rates Updated",
-        description: "Staff rates have been successfully updated.",
-      })
+    setStaffData(
+      staffData.map((staff) =>
+        staff.id === id
+          ? {
+              ...staff,
+              role: editValues.role,
+              project: editValues.project,
+              costRate: editValues.costRate,
+              billRate: editValues.billRate,
+            }
+          : staff,
+      ),
+    )
+    setEditingId(null)
+    toast({
+      title: "Rates Updated",
+      description: "Staff rates have been successfully updated.",
+    })
     } catch (err) {
       toast({
         title: "Error",

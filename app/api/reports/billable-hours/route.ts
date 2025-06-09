@@ -4,38 +4,38 @@ import { prisma } from "@/lib/prisma"
 // GET /api/reports/billable-hours?from=YYYY-MM-DD&to=YYYY-MM-DD&projectId=optional
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url)
-    const from = searchParams.get("from")
-    const to = searchParams.get("to")
-    const projectId = searchParams.get("projectId")
+  const { searchParams } = new URL(req.url)
+  const from = searchParams.get("from")
+  const to = searchParams.get("to")
+  const projectId = searchParams.get("projectId")
 
-    if (!from || !to) {
-      return NextResponse.json({ error: "Missing from or to date" }, { status: 400 })
-    }
+  if (!from || !to) {
+    return NextResponse.json({ error: "Missing from or to date" }, { status: 400 })
+  }
 
     // Build the where clause for time logs
     const whereClause: any = {
-      date: {
-        gte: new Date(from),
+    date: {
+      gte: new Date(from),
         lte: new Date(to)
       }
-    }
+  }
 
     // Add project filter if specified
-    if (projectId && projectId !== "all") {
+  if (projectId && projectId !== "all") {
       whereClause.projectId = projectId
-    }
+  }
 
     console.log('Fetching time logs with where clause:', whereClause)
 
     // Get all time logs within the date range
     const timeLogs = await prisma.timeLog.findMany({
       where: whereClause,
-      include: {
-        user: true,
+    include: {
+      user: true,
         project: true
       }
-    })
+  })
 
     console.log(`Found ${timeLogs.length} time logs`)
 
@@ -51,11 +51,11 @@ export async function GET(req: NextRequest) {
           id: userId,
           name: log.user.name,
           role: log.user.role,
-          totalHours: 0,
-          billableHours: 0,
+        totalHours: 0,
+        billableHours: 0,
           projects: new Map()
-        }
       }
+    }
 
       // Add to total hours
       acc[userId].totalHours += log.hours
@@ -77,9 +77,9 @@ export async function GET(req: NextRequest) {
 
       const projectHours = acc[userId].projects.get(projectKey)
       projectHours.hours += log.hours
-      if (log.billable) {
+    if (log.billable) {
         projectHours.billable += log.hours
-      }
+    }
 
       return acc
     }, {})

@@ -102,9 +102,9 @@ export function BillableHoursReport({ dateRange, projectId }: BillableHoursRepor
 		return (
 			<div className="space-y-4">
 				<Alert variant="destructive">
-					<AlertCircle className="h-4 w-4" />
-					<AlertTitle>Error</AlertTitle>
-					<AlertDescription>{error}</AlertDescription>
+				<AlertCircle className="h-4 w-4" />
+				<AlertTitle>Error</AlertTitle>
+				<AlertDescription>{error}</AlertDescription>
 				</Alert>
 				{debugInfo && (
 					<Alert>
@@ -127,7 +127,7 @@ export function BillableHoursReport({ dateRange, projectId }: BillableHoursRepor
 					<Alert>
 						<AlertTitle>Debug Information</AlertTitle>
 						<AlertDescription>{debugInfo}</AlertDescription>
-					</Alert>
+			</Alert>
 				)}
 			</div>
 		)
@@ -135,158 +135,158 @@ export function BillableHoursReport({ dateRange, projectId }: BillableHoursRepor
 
 	return (
 		<div className="space-y-6">
-			<div className="grid gap-4 md:grid-cols-3">
-				<Card>
-					<CardHeader className="pb-2">
-						<CardTitle className="text-sm font-medium">Total Hours</CardTitle>
-						<CardDescription>
-							{format(dateRange.from, "MMM d, yyyy")} - {format(dateRange.to, "MMM d, yyyy")}
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">{totalHours}</div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardHeader className="pb-2">
-						<CardTitle className="text-sm font-medium">Billable Hours</CardTitle>
-						<CardDescription>
-							{format(dateRange.from, "MMM d, yyyy")} - {format(dateRange.to, "MMM d, yyyy")}
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">{totalBillableHours}</div>
-					</CardContent>
-				</Card>
-				<Card>
-					<CardHeader className="pb-2">
-						<CardTitle className="text-sm font-medium">Billable Percentage</CardTitle>
-						<CardDescription>
-							{format(dateRange.from, "MMM d, yyyy")} - {format(dateRange.to, "MMM d, yyyy")}
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="text-2xl font-bold">{averageBillablePercentage.toFixed(1)}%</div>
-						<Progress value={averageBillablePercentage} className="mt-2" />
-					</CardContent>
-				</Card>
-			</div>
+					<div className="grid gap-4 md:grid-cols-3">
+						<Card>
+							<CardHeader className="pb-2">
+								<CardTitle className="text-sm font-medium">Total Hours</CardTitle>
+								<CardDescription>
+									{format(dateRange.from, "MMM d, yyyy")} - {format(dateRange.to, "MMM d, yyyy")}
+								</CardDescription>
+							</CardHeader>
+							<CardContent>
+								<div className="text-2xl font-bold">{totalHours}</div>
+							</CardContent>
+						</Card>
+						<Card>
+							<CardHeader className="pb-2">
+								<CardTitle className="text-sm font-medium">Billable Hours</CardTitle>
+								<CardDescription>
+									{format(dateRange.from, "MMM d, yyyy")} - {format(dateRange.to, "MMM d, yyyy")}
+								</CardDescription>
+							</CardHeader>
+							<CardContent>
+								<div className="text-2xl font-bold">{totalBillableHours}</div>
+							</CardContent>
+						</Card>
+						<Card>
+							<CardHeader className="pb-2">
+								<CardTitle className="text-sm font-medium">Billable Percentage</CardTitle>
+								<CardDescription>
+									{format(dateRange.from, "MMM d, yyyy")} - {format(dateRange.to, "MMM d, yyyy")}
+								</CardDescription>
+							</CardHeader>
+							<CardContent>
+								<div className="text-2xl font-bold">{averageBillablePercentage.toFixed(1)}%</div>
+								<Progress value={averageBillablePercentage} className="mt-2" />
+							</CardContent>
+						</Card>
+					</div>
 
-			<div className="grid gap-6 md:grid-cols-2">
-				<Card className="md:col-span-2">
-					<CardHeader>
-						<CardTitle>Billable Hours by Team Member</CardTitle>
-						<CardDescription>Percentage of billable hours for each team member</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="h-[350px]">
-							<ResponsiveContainer width="100%" height="100%">
-								<BarChart
-									data={chartData}
-									margin={{
-										top: 20,
-										right: 30,
-										left: 20,
-										bottom: 5,
-									}}
-								>
-									<CartesianGrid strokeDasharray="3 3" />
-									<XAxis dataKey="name" />
-									<YAxis tickFormatter={(value) => `${value}%`} domain={[0, 100]} />
-									<Tooltip formatter={(value) => [`${value}%`, "Billable"]} animationDuration={300} />
-									<Bar dataKey="billablePercentage" name="Billable %" radius={[8, 8, 0, 0]} animationDuration={800}>
-										{chartData.map((entry, index) => (
-											<Cell
-												key={`cell-${index}`}
-												fill={
-													entry.billablePercentage < 70
-														? "#ef4444"
-														: entry.billablePercentage < 80
-															? "#f59e0b"
-															: "#009A6A"
-												}
-											/>
-										))}
-									</Bar>
-								</BarChart>
-							</ResponsiveContainer>
-						</div>
-					</CardContent>
-				</Card>
-
-				<Card className="md:col-span-2">
-					<CardHeader>
-						<CardTitle>Billable Hours Analysis</CardTitle>
-						<CardDescription>Detailed breakdown of billable hours by team member</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="rounded-md border">
-							<Table>
-								<TableHeader>
-									<TableRow>
-										<TableHead>Team Member</TableHead>
-										<TableHead>Role</TableHead>
-										<TableHead className="text-right">Total Hours</TableHead>
-										<TableHead className="text-right">Billable Hours</TableHead>
-										<TableHead className="text-right">Billable %</TableHead>
-										<TableHead>Utilization</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									{data.map((item) => (
-										<TableRow key={item.id}>
-											<TableCell className="font-medium">{item.name}</TableCell>
-											<TableCell>{item.role}</TableCell>
-											<TableCell className="text-right">{item.totalHours}</TableCell>
-											<TableCell className="text-right">{item.billableHours}</TableCell>
-											<TableCell className="text-right">{item.billablePercentage}%</TableCell>
-											<TableCell>
-												<div className="flex items-center gap-2">
-													<Progress
-														value={item.billablePercentage}
-														className="h-2"
-														indicatorClassName={
-															item.billablePercentage < 70
-																? "bg-red-500"
-																: item.billablePercentage < 80
-																	? "bg-amber-500"
-																	: "bg-green-500"
+					<div className="grid gap-6 md:grid-cols-2">
+						<Card className="md:col-span-2">
+							<CardHeader>
+								<CardTitle>Billable Hours by Team Member</CardTitle>
+								<CardDescription>Percentage of billable hours for each team member</CardDescription>
+							</CardHeader>
+							<CardContent>
+								<div className="h-[350px]">
+									<ResponsiveContainer width="100%" height="100%">
+										<BarChart
+											data={chartData}
+											margin={{
+												top: 20,
+												right: 30,
+												left: 20,
+												bottom: 5,
+											}}
+										>
+											<CartesianGrid strokeDasharray="3 3" />
+											<XAxis dataKey="name" />
+											<YAxis tickFormatter={(value) => `${value}%`} domain={[0, 100]} />
+											<Tooltip formatter={(value) => [`${value}%`, "Billable"]} animationDuration={300} />
+											<Bar dataKey="billablePercentage" name="Billable %" radius={[8, 8, 0, 0]} animationDuration={800}>
+												{chartData.map((entry, index) => (
+													<Cell
+														key={`cell-${index}`}
+														fill={
+															entry.billablePercentage < 70
+																? "#ef4444"
+																: entry.billablePercentage < 80
+																	? "#f59e0b"
+																	: "#009A6A"
 														}
 													/>
-													<span className="text-xs text-muted-foreground">{item.billablePercentage}%</span>
-												</div>
-											</TableCell>
-										</TableRow>
-									))}
-									<TableRow className="font-medium">
-										<TableCell>Total</TableCell>
-										<TableCell></TableCell>
-										<TableCell className="text-right">{totalHours}</TableCell>
-										<TableCell className="text-right">{totalBillableHours}</TableCell>
-										<TableCell className="text-right">{averageBillablePercentage.toFixed(1)}%</TableCell>
-										<TableCell>
-											<div className="flex items-center gap-2">
-												<Progress
-													value={averageBillablePercentage}
-													className="h-2"
-													indicatorClassName={
-														averageBillablePercentage < 70
-															? "bg-red-500"
-															: averageBillablePercentage < 80
-																? "bg-amber-500"
-																: "bg-green-500"
-													}
-												/>
-												<span className="text-xs text-muted-foreground">{averageBillablePercentage.toFixed(1)}%</span>
-											</div>
-										</TableCell>
-									</TableRow>
-								</TableBody>
-							</Table>
-						</div>
-					</CardContent>
-				</Card>
-			</div>
+												))}
+											</Bar>
+										</BarChart>
+									</ResponsiveContainer>
+								</div>
+							</CardContent>
+						</Card>
+
+						<Card className="md:col-span-2">
+							<CardHeader>
+								<CardTitle>Billable Hours Analysis</CardTitle>
+								<CardDescription>Detailed breakdown of billable hours by team member</CardDescription>
+							</CardHeader>
+							<CardContent>
+								<div className="rounded-md border">
+									<Table>
+										<TableHeader>
+											<TableRow>
+												<TableHead>Team Member</TableHead>
+												<TableHead>Role</TableHead>
+												<TableHead className="text-right">Total Hours</TableHead>
+												<TableHead className="text-right">Billable Hours</TableHead>
+												<TableHead className="text-right">Billable %</TableHead>
+												<TableHead>Utilization</TableHead>
+											</TableRow>
+										</TableHeader>
+										<TableBody>
+									{data.map((item) => (
+												<TableRow key={item.id}>
+													<TableCell className="font-medium">{item.name}</TableCell>
+													<TableCell>{item.role}</TableCell>
+													<TableCell className="text-right">{item.totalHours}</TableCell>
+													<TableCell className="text-right">{item.billableHours}</TableCell>
+													<TableCell className="text-right">{item.billablePercentage}%</TableCell>
+													<TableCell>
+														<div className="flex items-center gap-2">
+															<Progress
+																value={item.billablePercentage}
+																className="h-2"
+																indicatorClassName={
+																	item.billablePercentage < 70
+																		? "bg-red-500"
+																		: item.billablePercentage < 80
+																			? "bg-amber-500"
+																			: "bg-green-500"
+																}
+															/>
+															<span className="text-xs text-muted-foreground">{item.billablePercentage}%</span>
+														</div>
+													</TableCell>
+												</TableRow>
+											))}
+											<TableRow className="font-medium">
+												<TableCell>Total</TableCell>
+												<TableCell></TableCell>
+												<TableCell className="text-right">{totalHours}</TableCell>
+												<TableCell className="text-right">{totalBillableHours}</TableCell>
+												<TableCell className="text-right">{averageBillablePercentage.toFixed(1)}%</TableCell>
+												<TableCell>
+													<div className="flex items-center gap-2">
+														<Progress
+														value={averageBillablePercentage}
+															className="h-2"
+															indicatorClassName={
+																averageBillablePercentage < 70
+																	? "bg-red-500"
+																	: averageBillablePercentage < 80
+																		? "bg-amber-500"
+																		: "bg-green-500"
+															}
+														/>
+														<span className="text-xs text-muted-foreground">{averageBillablePercentage.toFixed(1)}%</span>
+													</div>
+												</TableCell>
+											</TableRow>
+										</TableBody>
+									</Table>
+								</div>
+							</CardContent>
+						</Card>
+					</div>
 		</div>
 	)
 }

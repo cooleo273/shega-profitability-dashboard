@@ -503,158 +503,90 @@ export function CreateProjectForm({ projectId }: { projectId?: string }) {
                 <DollarSign className="h-4 w-4" />
                 Budget
               </TabsTrigger>
-            </TabsList>
+          </TabsList>
 
-            <Form {...form}>
+          <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <TabsContent value="details" className="space-y-6">
                   <div className="grid grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Project Name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Enter project name" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Project Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter project name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                    <FormField
-                      control={form.control}
-                      name="client"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Client</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select a client" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {clients.map((client) => (
-                                <SelectItem key={client.id} value={client.id}>
-                                  {client.name}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                <FormField
+                  control={form.control}
+                  name="client"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Client</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a client" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {clients.map((client) => (
+                            <SelectItem key={client.id} value={client.id}>
+                              {client.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                   </div>
 
                   <div className="grid grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="startDate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Start Date</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-full pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    field.value.toLocaleDateString()
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date < new Date(new Date().setHours(0, 0, 0, 0))
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="endDate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>End Date</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-full pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    field.value.toLocaleDateString()
-                                  ) : (
-                                    <span>Pick a date</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0" align="start">
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date < form.getValues("startDate")
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
                   <FormField
                     control={form.control}
-                    name="status"
+                    name="startDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Status</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select status" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {statusOptions.map((status) => (
-                              <SelectItem key={status.value} value={status.value}>
-                                {status.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <FormLabel>Start Date</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full pl-3 text-left font-normal",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  field.value.toLocaleDateString()
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={(date) =>
+                                date < new Date(new Date().setHours(0, 0, 0, 0))
+                              }
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -662,22 +594,90 @@ export function CreateProjectForm({ projectId }: { projectId?: string }) {
 
                   <FormField
                     control={form.control}
-                    name="description"
+                    name="endDate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel>End Date</FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={"outline"}
+                                className={cn(
+                                  "w-full pl-3 text-left font-normal",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value ? (
+                                  field.value.toLocaleDateString()
+                                ) : (
+                                  <span>Pick a date</span>
+                                )}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={field.onChange}
+                              disabled={(date) =>
+                                date < form.getValues("startDate")
+                              }
+                              initialFocus
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <Textarea
-                            placeholder="Enter project description"
-                            className="min-h-[120px] resize-none"
-                            {...field}
-                          />
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </TabsContent>
+                        <SelectContent>
+                          {statusOptions.map((status) => (
+                            <SelectItem key={status.value} value={status.value}>
+                              {status.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter project description"
+                            className="min-h-[120px] resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </TabsContent>
 
                 <TabsContent value="deliverables" className="space-y-6">
                   <div className="flex items-center justify-between">
@@ -726,7 +726,7 @@ export function CreateProjectForm({ projectId }: { projectId?: string }) {
                                 />
                               </PopoverContent>
                             </Popover>
-                          </div>
+                    </div>
                           <div className="col-span-2">
                             <Input
                               type="number"
@@ -735,7 +735,7 @@ export function CreateProjectForm({ projectId }: { projectId?: string }) {
                               value={deliverable.hours}
                               onChange={(e) => updateDeliverable(deliverable.id, "hours", Number(e.target.value))}
                             />
-                          </div>
+                  </div>
                           <div className="col-span-2">
                             <Select
                               value={deliverable.status}
@@ -764,80 +764,80 @@ export function CreateProjectForm({ projectId }: { projectId?: string }) {
                         </div>
                       ))
                     )}
-                  </div>
-                </TabsContent>
+                </div>
+              </TabsContent>
 
                 <TabsContent value="team" className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-medium">Project Team</h3>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={addTeamMember}
-                    >
-                      <Plus className="mr-2 h-4 w-4" /> Add Member
-                    </Button>
-                  </div>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-medium">Project Team</h3>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={addTeamMember}
+                  >
+                    <Plus className="mr-2 h-4 w-4" /> Add Member
+                  </Button>
+                </div>
 
-                  <div className="space-y-4">
-                    {teamMembers.length === 0 ? (
-                      <div className="rounded-md border border-dashed p-6 text-center">
-                        <p className="text-sm text-muted-foreground">
-                          No team members added yet
-                        </p>
-                      </div>
-                    ) : (
-                      teamMembers.map((member) => (
-                        <div key={member.id} className="grid grid-cols-12 gap-4 rounded-md border p-4">
-                          <div className="col-span-5">
-                            <Select
-                              value={member.userId}
-                              onValueChange={(value) => updateTeamMember(member.id, "userId", value)}
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select member" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {users.map((user) => (
-                                  <SelectItem key={user.id} value={user.id}>
-                                    {user.name} (${user.hourlyRate}/hr)
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="col-span-4">
-                            <Input
-                              placeholder="Role"
-                              value={member.role}
-                              onChange={(e) => updateTeamMember(member.id, "role", e.target.value)}
-                            />
-                          </div>
-                          <div className="col-span-2">
-                            <Input
-                              type="number"
-                              min="0"
-                              placeholder="Hours"
-                              value={member.hours}
-                              onChange={(e) => updateTeamMember(member.id, "hours", Number(e.target.value))}
-                            />
-                          </div>
-                          <div className="col-span-1">
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => removeTeamMember(member.id)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
+                <div className="space-y-4">
+                  {teamMembers.length === 0 ? (
+                    <div className="rounded-md border border-dashed p-6 text-center">
+                      <p className="text-sm text-muted-foreground">
+                        No team members added yet
+                      </p>
+                    </div>
+                  ) : (
+                    teamMembers.map((member) => (
+                      <div key={member.id} className="grid grid-cols-12 gap-4 rounded-md border p-4">
+                        <div className="col-span-5">
+                          <Select
+                            value={member.userId}
+                            onValueChange={(value) => updateTeamMember(member.id, "userId", value)}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select member" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {users.map((user) => (
+                                <SelectItem key={user.id} value={user.id}>
+                                  {user.name} (${user.hourlyRate}/hr)
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
-                      ))
-                    )}
-                  </div>
-                </TabsContent>
+                        <div className="col-span-4">
+                          <Input
+                            placeholder="Role"
+                            value={member.role}
+                            onChange={(e) => updateTeamMember(member.id, "role", e.target.value)}
+                          />
+                        </div>
+                        <div className="col-span-2">
+                          <Input
+                            type="number"
+                            min="0"
+                            placeholder="Hours"
+                            value={member.hours}
+                            onChange={(e) => updateTeamMember(member.id, "hours", Number(e.target.value))}
+                          />
+                        </div>
+                        <div className="col-span-1">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeTeamMember(member.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </TabsContent>
 
                 <TabsContent value="budget" className="space-y-6">
                   <div className="grid grid-cols-2 gap-6">
@@ -933,81 +933,81 @@ export function CreateProjectForm({ projectId }: { projectId?: string }) {
                   </div>
 
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between">
                       <div>
                         <h3 className="text-lg font-medium">Project Expenses (Optional)</h3>
                         <p className="text-sm text-muted-foreground">Add any additional expenses for the project</p>
                       </div>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
                         onClick={addExpense}
-                      >
+                  >
                         <Plus className="mr-2 h-4 w-4" /> Add Expense
-                      </Button>
-                    </div>
+                  </Button>
+                </div>
 
-                    <div className="space-y-4">
+                <div className="space-y-4">
                       {expenses.map((expense, index) => (
                         <div key={index} className="grid grid-cols-12 gap-4 rounded-md border p-4">
-                          <div className="col-span-4">
-                            <Input
+                        <div className="col-span-4">
+                          <Input
                               placeholder="Expense name"
                               value={expense.name}
                               onChange={(e) => updateExpense(index, "name", e.target.value)}
-                            />
-                          </div>
-                          <div className="col-span-3">
-                            <Input
-                              type="number"
+                          />
+                        </div>
+                        <div className="col-span-3">
+                          <Input
+                            type="number"
                               placeholder="Amount"
                               value={expense.amount}
                               onChange={(e) => updateExpense(index, "amount", parseFloat(e.target.value) || 0)}
-                            />
-                          </div>
+                          />
+                        </div>
                           <div className="col-span-3">
-                            <Select
+                          <Select
                               value={expense.type}
                               onValueChange={(value) => updateExpense(index, "type", value)}
-                            >
-                              <SelectTrigger>
+                          >
+                            <SelectTrigger>
                                 <SelectValue placeholder="Type" />
-                              </SelectTrigger>
-                              <SelectContent>
+                            </SelectTrigger>
+                            <SelectContent>
                                 <SelectItem value="Software">Software</SelectItem>
                                 <SelectItem value="Hardware">Hardware</SelectItem>
                                 <SelectItem value="Travel">Travel</SelectItem>
                                 <SelectItem value="Other">Other</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-                          <div className="col-span-1">
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => removeExpense(index)}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
+                            </SelectContent>
+                          </Select>
                         </div>
+                        <div className="col-span-1">
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                              onClick={() => removeExpense(index)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
                       ))}
                     </div>
-                  </div>
-                </TabsContent>
+                </div>
+              </TabsContent>
 
                 <div className="flex justify-between space-x-2 pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
+                <Button
+                  type="button"
+                  variant="outline"
                     onClick={() => setActiveTab(getPreviousTab(activeTab))}
                     className="gap-2"
-                  >
+                >
                     <ArrowLeft className="h-4 w-4" />
                     Previous
-                  </Button>
+                </Button>
                   {activeTab === "budget" ? (
                     <Button type="submit" disabled={isSubmitting} className="gap-2">
                       {isSubmitting ? (
@@ -1021,7 +1021,7 @@ export function CreateProjectForm({ projectId }: { projectId?: string }) {
                           <CheckCircle2 className="h-4 w-4" />
                         </>
                       )}
-                    </Button>
+                </Button>
                   ) : (
                     <Button
                       type="button"
@@ -1032,12 +1032,12 @@ export function CreateProjectForm({ projectId }: { projectId?: string }) {
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   )}
-                </div>
-              </form>
-            </Form>
-          </Tabs>
-        </CardContent>
-      </Card>
+              </div>
+            </form>
+          </Form>
+        </Tabs>
+      </CardContent>
+    </Card>
     </div>
   )
 }

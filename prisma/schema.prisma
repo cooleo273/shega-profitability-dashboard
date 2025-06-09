@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,20 +7,20 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
- 
 
 model User {
-  id         String     @id @default(cuid())
-  name       String
-  email      String     @unique
-  role       String     @default("user") // admin, user, etc.
-  hourlyRate Float      @default(0)      // User's default hourly rate
-  timeLogs   TimeLog[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id                 String              @id @default(cuid())
+  name               String
+  email              String              @unique
+  role               String              @default("user")
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  hourlyRate         Float               @default(0)
+  hashedPassword     String?
+  isFirstLogin       Boolean             @default(true)
   projectTeamMembers ProjectTeamMember[]
+  timeLogs           TimeLog[]
 }
-
 
 model Client {
   id        String    @id @default(cuid())
@@ -31,102 +28,103 @@ model Client {
   email     String?
   phone     String?
   address   String?
-  projects  Project[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  projects  Project[]
 }
 
 model Project {
-  id             String        @id @default(cuid())
+  id             String              @id @default(cuid())
   name           String
   description    String?
-  status         String        @default("Planning") // Planning, In Progress, Completed, On Hold
+  status         String              @default("Planning")
   startDate      DateTime
   endDate        DateTime?
-  budget         Float         @default(0)
-  hourlyRate     Float         @default(0)
-  estimatedHours Float         @default(0)
-  profitMargin   Float         @default(20) // Default 20% profit margin
+  budget         Float               @default(0)
+  hourlyRate     Float               @default(0)
+  estimatedHours Float               @default(0)
   notes          String?
-  client         Client        @relation(fields: [clientId], references: [id])
   clientId       String
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  profitMargin   Float               @default(20)
   deliverables   Deliverable[]
-  timeLogs       TimeLog[]
-  tasks          Task[]
+  client         Client              @relation(fields: [clientId], references: [id])
   expenses       ProjectExpense[]
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
   teamMembers    ProjectTeamMember[]
+  tasks          Task[]
+  timeLogs       TimeLog[]
 }
 
 model Deliverable {
-  id        String   @id @default(cuid())
-  name      String
-  dueDate   DateTime
-  hours     Float    @default(0)
-  status    String   @default("Not Started") // Not Started, In Progress, Completed
-  project   Project  @relation(fields: [projectId], references: [id])
-  projectId String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  dueDate     DateTime
+  hours       Float    @default(0)
+  status      String   @default("Not Started")
+  projectId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  description String?
+  project     Project  @relation(fields: [projectId], references: [id])
 }
 
 model Task {
   id              String    @id @default(cuid())
   title           String
   description     String?
-  status          String    @default("notStarted") // notStarted, inProgress, completed
-  priority        String    @default("medium") // low, medium, high
+  status          String    @default("notStarted")
+  priority        String    @default("medium")
   dueDate         DateTime?
   percentComplete Float     @default(0)
-  project         Project   @relation(fields: [projectId], references: [id])
   projectId       String
-  timeLogs        TimeLog[]
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+  project         Project   @relation(fields: [projectId], references: [id])
+  timeLogs        TimeLog[]
 }
 
 model TimeLog {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   date        DateTime
   hours       Float
   description String?
-  billable    Boolean   @default(true)
-  user        User      @relation(fields: [userId], references: [id])
+  billable    Boolean  @default(true)
   userId      String
-  project     Project   @relation(fields: [projectId], references: [id])
   projectId   String
-  task        Task?     @relation(fields: [taskId], references: [id])
   taskId      String?
   startTime   String?
   endTime     String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  project     Project  @relation(fields: [projectId], references: [id])
+  task        Task?    @relation(fields: [taskId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
 }
 
 model ProjectTeamMember {
   id        String   @id @default(cuid())
-  project   Project  @relation(fields: [projectId], references: [id])
   projectId String
-  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  role      String   // Role within the project
-  hours     Float    // Hours allocated to the project
+  role      String
+  hours     Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  project   Project  @relation(fields: [projectId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
-  @@unique([projectId, userId]) // Ensure a user is only added once to a project
+  @@unique([projectId, userId])
 }
 
 model ProjectExpense {
   id          String   @id @default(cuid())
   name        String
   amount      Float
-  type        String   // e.g., "Software", "Hardware", "Travel", "Other"
+  type        String
   description String?
   date        DateTime
-  project     Project  @relation(fields: [projectId], references: [id])
   projectId   String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  project     Project  @relation(fields: [projectId], references: [id])
 }

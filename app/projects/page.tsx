@@ -1,5 +1,4 @@
-import { Plus } from "lucide-react"
-import { Button } from "@/components/ui/button"
+
 import { ProjectList } from "@/components/projects/project-list"
 
 export default function ProjectsPage() {

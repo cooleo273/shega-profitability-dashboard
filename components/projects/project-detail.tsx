@@ -46,10 +46,10 @@ function StatusBadge({ status, className }: StatusBadgeProps) {
 interface ProjectTeamMember {
   id: string;
   user: {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
     hourlyRate: number;
-    avatarUrl?: string;
+  avatarUrl?: string;
   };
   role: string;
   hours: number;
@@ -117,11 +117,11 @@ interface DetailItemProps {
 
 const DetailItem: React.FC<DetailItemProps> = ({ icon: Icon, label, value, className, valueClassName, tooltip }) => {
   const content = (
-    <div className={cn("flex flex-col", className)}>
+  <div className={cn("flex flex-col", className)}>
       <dt className="text-sm font-medium text-muted-foreground/80 flex items-center">
         {Icon && <Icon className="h-4 w-4 mr-2 flex-shrink-0 text-primary/70" />}
-        {label}
-      </dt>
+      {label}
+    </dt>
       <dd className={cn("mt-1 text-sm text-foreground/90 break-words", valueClassName)}>{value || "N/A"}</dd>
     </div>
   );
@@ -225,7 +225,7 @@ export function ProjectDetail({ id }: ProjectDetailProps) {
       : totalActualCosts > 0 ? 100 : 0; // If budget is 0 but costs exist, consider it 100% utilized or over
 
     const budgetVariance = project.budget - totalActualCosts; // Positive if under budget, negative if over
-
+    
     return {
       totalLaborCost,
       totalOtherExpenses,
@@ -306,7 +306,7 @@ export function ProjectDetail({ id }: ProjectDetailProps) {
         <AlertDescription>{error}</AlertDescription>
         <Button onClick={() => router.push('/projects')} variant="link" className="mt-4 block text-destructive hover:text-destructive/80">
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Projects
-        </Button>
+          </Button>
       </Alert>
     );
   }
@@ -437,7 +437,7 @@ export function ProjectDetail({ id }: ProjectDetailProps) {
                     </div>
                   )}
                 </section>
-                
+
                 <Separator />
 
                 <section>
@@ -493,7 +493,7 @@ export function ProjectDetail({ id }: ProjectDetailProps) {
                             </Button>
                         </Card>
                     )}
-                </section>
+                    </section>
               </div>
 
               {/* Right Column: Team */}
@@ -515,10 +515,10 @@ export function ProjectDetail({ id }: ProjectDetailProps) {
                           <div className="flex items-center gap-3">
                             <Avatar className="h-9 w-9 ring-2 ring-muted">
                               <AvatarImage src={member.user.avatarUrl} alt={member.user.name} />
-                              <AvatarFallback>
+                            <AvatarFallback>
                                 {member.user.name?.split(' ').map(n => n[0]).join('').toUpperCase() || '?'}
-                              </AvatarFallback>
-                            </Avatar>
+                            </AvatarFallback>
+                          </Avatar>
                             <div className="flex-1">
                               <div className="flex items-center justify-between">
                                 <p className="text-sm font-medium text-foreground">{member.user.name}</p>
@@ -552,7 +552,7 @@ export function ProjectDetail({ id }: ProjectDetailProps) {
                   ) : (
                     <Card className="p-6 text-center border-dashed border-muted/50 hover:border-primary/20 transition-colors duration-200">
                       <Users className="h-10 w-10 mx-auto text-muted-foreground/50 mb-3" />
-                      <p className="text-sm text-muted-foreground">No team members assigned to this project.</p>
+                    <p className="text-sm text-muted-foreground">No team members assigned to this project.</p>
                        <Button variant="secondary" size="sm" className="mt-4 hover:bg-muted/50" onClick={() => router.push(`/projects/${id}/edit?tab=team`)}>
                          Assign Team
                        </Button>

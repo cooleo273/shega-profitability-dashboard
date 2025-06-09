@@ -40,7 +40,7 @@ export function CostBreakdownReport({ dateRange, projectId }: CostBreakdownRepor
 	useEffect(() => {
 		const fetchData = async () => {
 			setIsLoading(true)
-			setError(null)
+		setError(null)
 			setDebugInfo(null)
 			try {
 				const fromDate = dateRange.from.toISOString().split('T')[0]

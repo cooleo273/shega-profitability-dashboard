@@ -4,16 +4,16 @@ import { prisma } from "@/lib/prisma"
 // GET /api/reports/cost-breakdown?from=YYYY-MM-DD&to=YYYY-MM-DD&projectId=optional
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url)
-    const from = searchParams.get("from")
-    const to = searchParams.get("to")
-    const projectId = searchParams.get("projectId")
+  const { searchParams } = new URL(req.url)
+  const from = searchParams.get("from")
+  const to = searchParams.get("to")
+  const projectId = searchParams.get("projectId")
 
     console.log("Received request with params:", { from, to, projectId })
 
-    if (!from || !to) {
-      return NextResponse.json({ error: "Missing from or to date" }, { status: 400 })
-    }
+  if (!from || !to) {
+    return NextResponse.json({ error: "Missing from or to date" }, { status: 400 })
+  }
 
     // Validate project exists if specified
     if (projectId && projectId !== "all") {
@@ -39,14 +39,14 @@ export async function GET(req: NextRequest) {
 
     // Build the where clause for time logs
     const whereClause: any = {
-      date: {
-        gte: new Date(from),
+    date: {
+      gte: new Date(from),
         lte: new Date(to)
       }
-    }
+  }
 
     // Add project filter if specified
-    if (projectId && projectId !== "all") {
+  if (projectId && projectId !== "all") {
       whereClause.projectId = projectId
     }
 
@@ -55,8 +55,8 @@ export async function GET(req: NextRequest) {
     // Get all time logs within the date range
     const timeLogs = await prisma.timeLog.findMany({
       where: whereClause,
-      include: {
-        user: true,
+    include: {
+      user: true,
         project: true
       }
     })

@@ -1,11 +1,67 @@
-import { BarChart3, DollarSign, TrendingUp, Users } from "lucide-react"
+"use client"
+
+import { useEffect, useState } from "react"
+import { BarChart3, DollarSign, Loader2, TrendingUp, Users } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ProjectPerformanceChart } from "@/components/dashboard/project-performance-chart"
 import { RevenueBreakdownChart } from "@/components/dashboard/revenue-breakdown-chart"
 import { CostDistributionChart } from "@/components/dashboard/cost-distribution-chart"
 import { FinancialOverviewChart } from "@/components/dashboard/financial-overview-chart"
 
+interface DashboardData {
+  metrics: {
+    totalProjects: number
+    activeProjects: number
+    totalRevenue: number
+    averageProfitability: number
+  }
+  projectPerformance: any[]
+  financialData: any[]
+  revenueBreakdown: any[]
+  costDistribution: any[]
+}
+
 export default function DashboardPage() {
+  const [data, setData] = useState<DashboardData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        const response = await fetch("/api/dashboard")
+        if (!response.ok) {
+          throw new Error("Failed to fetch dashboard data")
+        }
+        const dashboardData = await response.json()
+        setData(dashboardData)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="h-[calc(100vh-4rem)] flex flex-col items-center justify-center gap-4">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <p className="text-muted-foreground">Loading dashboard data...</p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>
+  }
+
+  if (!data) {
+    return <div>No data available</div>
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
@@ -23,8 +79,8 @@ export default function DashboardPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">+2 from last month</p>
+            <div className="text-2xl font-bold">{data.metrics.totalProjects}</div>
+            <p className="text-xs text-muted-foreground">Active projects: {data.metrics.activeProjects}</p>
           </CardContent>
         </Card>
         <Card className="shadow-sm hover:shadow-md transition-shadow">
@@ -33,8 +89,10 @@ export default function DashboardPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">18</div>
-            <p className="text-xs text-muted-foreground">+3 from last month</p>
+            <div className="text-2xl font-bold">{data.metrics.activeProjects}</div>
+            <p className="text-xs text-muted-foreground">
+              {((data.metrics.activeProjects / data.metrics.totalProjects) * 100).toFixed(1)}% of total
+            </p>
           </CardContent>
         </Card>
         <Card className="shadow-sm hover:shadow-md transition-shadow">
@@ -43,8 +101,10 @@ export default function DashboardPage() {
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$1.2M</div>
-            <p className="text-xs text-muted-foreground">+15% from last month</p>
+            <div className="text-2xl font-bold">
+              ${(data.metrics.totalRevenue / 1000).toFixed(1)}k
+            </div>
+            <p className="text-xs text-muted-foreground">Last 30 days</p>
           </CardContent>
         </Card>
         <Card className="shadow-sm hover:shadow-md transition-shadow">
@@ -53,8 +113,8 @@ export default function DashboardPage() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">32%</div>
-            <p className="text-xs text-muted-foreground">+2% from last month</p>
+            <div className="text-2xl font-bold">{data.metrics.averageProfitability.toFixed(1)}%</div>
+            <p className="text-xs text-muted-foreground">Across all projects</p>
           </CardContent>
         </Card>
       </div>
@@ -68,7 +128,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <ProjectPerformanceChart />
+              <ProjectPerformanceChart data={data.projectPerformance} />
             </div>
           </CardContent>
         </Card>
@@ -81,7 +141,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <FinancialOverviewChart />
+              <FinancialOverviewChart data={data.financialData} />
             </div>
           </CardContent>
         </Card>
@@ -92,11 +152,11 @@ export default function DashboardPage() {
         <Card className="shadow-sm hover:shadow-md transition-shadow">
           <CardHeader>
             <CardTitle>Revenue Breakdown</CardTitle>
-            <CardDescription>Revenue by project category</CardDescription>
+            <CardDescription>Revenue by project</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <RevenueBreakdownChart />
+              <RevenueBreakdownChart data={data.revenueBreakdown} />
             </div>
           </CardContent>
         </Card>
@@ -108,7 +168,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="h-[300px]">
-              <CostDistributionChart />
+              <CostDistributionChart data={data.costDistribution} />
             </div>
           </CardContent>
         </Card>
