@@ -40,7 +40,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   }, [])
 
   // Determine if sidebar and topbar should be shown
-  const showLayoutElements = pathname !== "/login" && !pathname.startsWith("/auth"); // Add other auth paths if needed
+  const showLayoutElements = pathname !== "/login" && pathname!= "/reset-password" && !pathname.startsWith("/auth"); // Add other auth paths if needed
 
   if (!showLayoutElements) {
     return <>{children}</>; // Render children directly for login/auth pages

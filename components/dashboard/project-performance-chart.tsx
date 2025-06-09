@@ -36,18 +36,14 @@ const COLORS = {
   },
 }
 
-// Mock data (same as yours)
-const data = [
-  { month: "Jan", completed: 5, inProgress: 8, planned: 3 },
-  { month: "Feb", completed: 7, inProgress: 10, planned: 5 },
-  { month: "Mar", completed: 10, inProgress: 12, planned: 6 },
-  { month: "Apr", completed: 12, inProgress: 9, planned: 4 },
-  { month: "May", completed: 15, inProgress: 7, planned: 3 },
-  { month: "Jun", completed: 18, inProgress: 5, planned: 2 },
-  // Add more data for a fuller chart
-  { month: "Jul", completed: 20, inProgress: 6, planned: 4 },
-  { month: "Aug", completed: 22, inProgress: 4, planned: 3 },
-]
+interface ProjectPerformanceData {
+  status: string
+  _count: number
+}
+
+interface ProjectPerformanceChartProps {
+  data: ProjectPerformanceData[]
+}
 
 // Custom Tooltip (aligned with previous charts)
 const CustomTooltip = ({ active, payload, label }: TooltipProps<ValueType, NameType>) => {
@@ -93,82 +89,37 @@ const renderLegend = (props: any) => {
   );
 };
 
+export function ProjectPerformanceChart({ data }: ProjectPerformanceChartProps) {
+  // Transform data for the chart
+  const chartData = data.map(item => ({
+    name: item.status,
+    value: item._count
+  }))
 
-export function ProjectPerformanceChart() {
   return (
-    // This div acts as the card container for the chart
-    <div className="rounded-xl border bg-card p-4 shadow-sm transition-all duration-300 hover:shadow-md">
-      <ResponsiveContainer height={250}>
+    <ResponsiveContainer width="100%" height="100%">
         <AreaChart
-          data={data}
-          margin={{ top: 10, right: 15, left: -15, bottom: 5 }} // Fine-tuned margins
-        >
-          <defs>
-            {Object.values(COLORS).map((color) => (
-              <linearGradient key={color.id} id={color.id} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={color.fill[0]} /> {/* Opacity is handled by rgba */}
-                <stop offset="95%" stopColor={color.fill[1]} />
-              </linearGradient>
-            ))}
-          </defs>
-
-          <CartesianGrid
-            strokeDasharray="4 4"
-            strokeOpacity={0.2}
-            vertical={false}
-            className="stroke-border"
-          />
-
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            axisLine={false}
-            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-            dy={10} // Pushes tick labels down a bit
-            padding={{ left: 10, right: 10 }}
-          />
-
-          <YAxis
-            tickLine={false}
-            axisLine={false}
-            tick={{ fontSize: 12, fill: "hsl(var(--muted-foreground))" }}
-            dx={-5} // Pushes tick labels left a bit
-            // allowDecimals={false} // Ensures whole numbers for project counts
-          />
-
-          <Tooltip
-            content={<CustomTooltip />}
-            cursor={{ stroke: "hsl(var(--accent))", strokeWidth: 1.5, strokeDasharray: "3 3" }}
-          />
-          <Legend
-            content={renderLegend}
-            verticalAlign="bottom"
-            wrapperStyle={{ paddingTop: '20px' }}
-          />
-
-          {Object.entries(COLORS).map(([key, colorDetails]) => (
+        data={chartData}
+        margin={{
+          top: 10,
+          right: 30,
+          left: 0,
+          bottom: 0,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="name" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
             <Area
-              key={key}
               type="monotone"
-              dataKey={key} // 'completed', 'inProgress', 'planned'
-              name={colorDetails.name}
-              stroke={colorDetails.stroke}
-              strokeWidth={2.5} // Slightly thinner line for area charts
-              fill={`url(#${colorDetails.id})`}
-              fillOpacity={1} // Gradient handles opacity
-              activeDot={{
-                r: 7, // Slightly smaller active dot
-                strokeWidth: 2,
-                stroke: colorDetails.stroke,
-                fill: "hsl(var(--card))", // Use card background for fill to pop
-                style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))" }, // Refined shadow
-              }}
-              animationDuration={700}
-              // animationEasing="ease-out" // Default is 'ease'
-            />
-          ))}
+          dataKey="value"
+          stroke="#8884d8"
+          fill="#8884d8"
+          fillOpacity={0.3}
+        />
         </AreaChart>
       </ResponsiveContainer>
-    </div>
   )
 }

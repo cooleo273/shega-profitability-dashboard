@@ -1,21 +1,20 @@
 "use client"
 
 import React, { useState } from "react"
-import { Cell, Pie, PieChart, ResponsiveContainer, Sector, Tooltip } from "recharts" // Removed Legend as we'll make a custom one
+import { Cell, Pie, PieChart, ResponsiveContainer, Sector, Tooltip, Legend } from "recharts" // Removed Legend as we'll make a custom one
 import type { TooltipProps } from "recharts"
 import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent"
 
-// Your COLORS and data structure are good.
-// Note: Recharts <Cell fill> doesn't directly consume complex gradient objects like this.
-// You'd need to define <linearGradient> in <defs> and reference by ID.
-// For simplicity, we'll use COLORS.xxx.main for fill.
-const COLORS_DATA = [
-  { name: "Web Development", value: 420000, color: "#10B981", id: "web" },
-  { name: "Mobile Apps", value: 320000, color: "#3B82F6", id: "mobile" },
-  { name: "UI/UX Design", value: 180000, color: "#8B5CF6", id: "uiUx" },
-  { name: "Consulting", value: 150000, color: "#F59E0B", id: "consulting" },
-  { name: "Maintenance", value: 90000, color: "#6B7280", id: "maintenance" },
-]
+interface RevenueData {
+  name: string
+  value: number
+}
+
+interface RevenueBreakdownChartProps {
+  data: RevenueData[]
+}
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D']
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("en-US", {
@@ -23,7 +22,7 @@ const formatCurrency = (value: number) => {
   }).format(value)
 }
 
-const totalRevenue = COLORS_DATA.reduce((sum, item) => sum + item.value, 0)
+const totalRevenue = COLORS.reduce((sum, item) => sum + item, 0)
 
 const CustomTooltip = ({ active, payload }: TooltipProps<ValueType, NameType>) => {
   if (active && payload && payload.length) {
@@ -92,30 +91,30 @@ const ChartDetailsPanel = ({ activeIndex, setActiveIndex }: { activeIndex: numbe
         <p className="text-xl text-foreground">{formatCurrency(totalRevenue)}</p>
       </div>
       <div className="space-y-1 w-full">
-        {COLORS_DATA.map((entry, index) => (
+        {COLORS.map((entry, index) => (
           <button
-            key={`legend-${entry.id}`}
-            className={`flex items-center group w-full text-left py-1 px-2.5 rounded-lg transition-all duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card focus-visible:ring-[${entry.color}]`}
+            key={`legend-${index}`}
+            className={`flex items-center group w-full text-left py-1 px-2.5 rounded-lg transition-all duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-card focus-visible:ring-[${entry}]`}
             onMouseEnter={() => setActiveIndex(index)}
             onMouseLeave={() => setActiveIndex(undefined)}
             onClick={() => setActiveIndex(index === activeIndex ? undefined : index)} // Toggle active state on click
             style={{
-              backgroundColor: activeIndex === index ? `${entry.color}20` : 'transparent', // Subtle bg for active/hovered
+              backgroundColor: activeIndex === index ? `${entry}20` : 'transparent', // Subtle bg for active/hovered
             }}
           >
             <span
               className="mr-3 inline-block h-4 w-4 flex-shrink-0 rounded-full transition-all duration-200 ease-out group-hover:scale-110"
               style={{
-                backgroundColor: entry.color,
-                boxShadow: `0 0 0 2px hsl(var(--card)), 0 0 0 3px ${entry.color}${activeIndex === index ? '90' : '50'}`,
+                backgroundColor: entry,
+                boxShadow: `0 0 0 2px hsl(var(--card)), 0 0 0 3px ${entry}${activeIndex === index ? '90' : '50'}`,
               }}
             />
             <div className="flex-grow flex justify-between items-center min-w-0">
               <span className={`text-sm font-medium truncate transition-colors ${activeIndex === index ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'}`}>
-                {entry.name}
+                {index + 1}
               </span>
-              <span className={`text-sm font-semibold transition-colors ${activeIndex === index ? `text-[${entry.color}]` : 'text-foreground group-hover:text-foreground'}`}>
-                {((entry.value / totalRevenue) * 100).toFixed(0)}%
+              <span className={`text-sm font-semibold transition-colors ${activeIndex === index ? `text-[${entry}]` : 'text-foreground group-hover:text-foreground'}`}>
+                {((entry / totalRevenue) * 100).toFixed(0)}%
               </span>
             </div>
           </button>
@@ -125,8 +124,7 @@ const ChartDetailsPanel = ({ activeIndex, setActiveIndex }: { activeIndex: numbe
   );
 };
 
-
-export function RevenueBreakdownChart() {
+export function RevenueBreakdownChart({ data }: RevenueBreakdownChartProps) {
   const [activeIndex, setActiveIndex] = useState<number | undefined>(undefined);
 
   const onPieEnter = (_: any, index: number) => {
@@ -142,47 +140,33 @@ export function RevenueBreakdownChart() {
       <div className="w-full md:w-3/5 h-1/2 md:h-full p-2 flex items-center justify-center"> {/* Adjusted width and centering */}
         <ResponsiveContainer width="100%" height="100%">
           <PieChart margin={{ top: 10, right: 10, bottom: 10, left: 10 }}>
-            {/* Removed <Legend /> component from Recharts */}
             <Pie
               activeIndex={activeIndex}
               activeShape={renderActiveShape}
-              data={COLORS_DATA} // Use your data array
-              cx="50%" // Center within its own container
+              data={data}
+              cx="50%"
               cy="50%"
               labelLine={false}
-              innerRadius="60%" // Adjust for desired donut thickness
-              outerRadius="85%" // Adjust based on container size
-              fill="#8884d8" // Default, overridden by Cell
+              outerRadius={80}
+              fill="#8884d8"
               dataKey="value"
-              nameKey="name" // Ensure this matches your data structure
-              paddingAngle={2}
-              stroke="hsl(var(--background))" // or --card
-              strokeWidth={4}
+              label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
               onMouseEnter={onPieEnter}
-              onMouseLeave={onPieLeave} // Keep this to allow tooltip to disappear
+              onMouseLeave={onPieLeave}
               animationDuration={800}
               animationEasing="ease-out"
             >
-              {COLORS_DATA.map((entry, index) => (
-                <Cell
-                  key={`cell-${entry.id}`}
-                  fill={entry.color} // Use main color for fill
-                  style={{
-                    filter: activeIndex === index ? undefined : `drop-shadow(0 1px 2px ${entry.color}20)`, // Subtle shadow for non-active
-                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", // Smoother transition
-                    opacity: activeIndex === undefined || activeIndex === index ? 1 : 0.55, // Dim inactive more
-                    transform: activeIndex === index ? 'scale(1.0)' : 'scale(0.98)', // Slight shrink for inactive
-                    cursor: 'pointer',
-                  }}
-                />
+              {data.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip
               content={<CustomTooltip />}
-              cursor={{ fill: 'transparent' }} // No cursor line for pie
+              cursor={{ fill: 'transparent' }}
               wrapperStyle={{ outline: 'none' }}
-              position={{ y: 0 }} // Try to position tooltip nicely
+              position={{ y: 0 }}
             />
+            <Legend />
           </PieChart>
         </ResponsiveContainer>
       </div>

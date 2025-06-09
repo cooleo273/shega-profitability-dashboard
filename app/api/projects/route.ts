@@ -45,20 +45,20 @@ export async function POST(request: NextRequest) {
 
     // Create the project with all relationships
     const projectData: Prisma.ProjectCreateInput = {
-      name: data.name,
-      description: data.description,
+        name: data.name,
+        description: data.description,
       status: data.status,
-      startDate: new Date(data.startDate),
+        startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
       budget: data.budget,
       hourlyRate: data.hourlyRate,
       estimatedHours: data.estimatedHours,
       profitMargin: data.profitMargin || 20, // Default to 20% if not provided
-      client: {
+        client: {
         connect: {
           id: data.clientId
         }
-      },
+        },
       teamMembers: {
         create: data.teamMembers.map((member: any) => ({
           userId: member.userId,
@@ -97,7 +97,7 @@ export async function POST(request: NextRequest) {
           include: {
             user: true
           }
-        },
+      },
         deliverables: true,
         expenses: true
       }

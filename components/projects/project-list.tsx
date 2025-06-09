@@ -116,12 +116,12 @@ const calculateProjectCost = (project: Project): number => {
 
   // 3. Calculate time log costs if available
   const timeLogCost = (project.timeLogs || []).reduce((total, log) => {
-    if (log.billable) {
-      const rate = log.user?.hourlyRate ?? project.hourlyRate ?? 0;
-      return total + (log.hours * rate);
-    }
-    return total;
-  }, 0);
+      if (log.billable) {
+        const rate = log.user?.hourlyRate ?? project.hourlyRate ?? 0;
+          return total + (log.hours * rate);
+      }
+      return total;
+    }, 0);
 
   // Return the total of all costs
   return laborCost + expensesCost + timeLogCost;
@@ -274,7 +274,7 @@ export function ProjectList() {
       return;
     }
 
-    try {
+      try {
       const response = await fetch(`/api/projects/${projectId}`, {
         method: 'DELETE',
         headers: {
@@ -282,20 +282,20 @@ export function ProjectList() {
         },
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: "Failed to delete project" }));
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: "Failed to delete project" }));
         throw new Error(errorData.message || `Failed to delete project: ${response.status} ${response.statusText}`);
-      }
+        }
 
       // Only update the UI if the deletion was successful
-      setProjects(prev => prev.filter(p => p.id !== projectId));
+        setProjects(prev => prev.filter(p => p.id !== projectId));
       toast({
         title: "Success",
         description: `Project "${projectName}" has been deleted.`,
         variant: "default",
       });
-    } catch (error) {
-      console.error('Error deleting project:', error);
+      } catch (error) {
+        console.error('Error deleting project:', error);
       toast({
         title: "Error",
         description: error instanceof Error ? error.message : "Failed to delete project. Please try again.",
