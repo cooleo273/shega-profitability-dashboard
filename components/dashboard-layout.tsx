@@ -57,10 +57,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           sidebarCollapsed ? "md:ml-16" : "md:ml-64" // Apply margin only on md and up
         } ml-0`} // No margin on mobile, sidebar will overlay or be hidden
       >
-        <Topbar
-          onToggleSidebar={toggleSidebar}
-          sidebarCollapsed={sidebarCollapsed}
-        />
+        <Topbar />
         <main className="flex-1 overflow-x-hidden overflow-y-auto p-4 sm:p-6 lg:p-8">
           {/* Max width container for the content */}
           <div className="w-full max-w-7xl mx-auto">

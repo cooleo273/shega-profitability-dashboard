@@ -7,6 +7,8 @@ import { ProjectPerformanceChart } from "@/components/dashboard/project-performa
 import { RevenueBreakdownChart } from "@/components/dashboard/revenue-breakdown-chart"
 import { CostDistributionChart } from "@/components/dashboard/cost-distribution-chart"
 import { FinancialOverviewChart } from "@/components/dashboard/financial-overview-chart"
+import { DashboardCards } from "@/components/dashboard/dashboard-cards"
+import { TotalVisitorsChart } from "@/components/dashboard/total-visitors-chart"
 
 interface DashboardData {
   metrics: {
@@ -72,52 +74,10 @@ export default function DashboardPage() {
       </div>
 
       {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{data.metrics.totalProjects}</div>
-            <p className="text-xs text-muted-foreground">Active projects: {data.metrics.activeProjects}</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Active Projects</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{data.metrics.activeProjects}</div>
-            <p className="text-xs text-muted-foreground">
-              {((data.metrics.activeProjects / data.metrics.totalProjects) * 100).toFixed(1)}% of total
-            </p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              ${(data.metrics.totalRevenue / 1000).toFixed(1)}k
-            </div>
-            <p className="text-xs text-muted-foreground">Last 30 days</p>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Average Profitability</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{data.metrics.averageProfitability.toFixed(1)}%</div>
-            <p className="text-xs text-muted-foreground">Across all projects</p>
-          </CardContent>
-        </Card>
-      </div>
+      <DashboardCards />
+
+      {/* Total Visitors Chart */}
+      <TotalVisitorsChart />
 
       {/* Project Performance Chart */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
